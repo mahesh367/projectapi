@@ -1,4 +1,5 @@
 // Import Required Modules
+    
 const express = require('express');
 const mysql = require('mysql2');
 const multer = require('multer');
@@ -9,9 +10,8 @@ const fs = require("fs");
 
 
 const app = express();
-const PORT = 9005;
-
-const SERVER_URL = "http://localhost:9005";
+const PORT =  process.env.PORT || 9005;
+const SERVER_URL = process.env.SERVER_URL || `http://localhost:${PORT}`;
 
 app.use(cors());
 // Middleware
@@ -20,11 +20,18 @@ app.use(bodyParser.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve images
 
 // MySQL Connection Setup
-const db = mysql.createConnection({
+/*const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',        // Replace with your MySQL username
     password: 'root',        // Replace with your MySQL password
     database: 'CRM_DB'
+});*/
+
+const db = mysql.createConnection({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'root',
+    database: process.env.DB_NAME || 'CRM_DB'
 });
 
 // Connect to MySQL
